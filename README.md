@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Game Utilities
+
+Right now there is one program, which is intended to help with smithing in the TerraFirmaCraft mod.
+
+# Dev stuff
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
