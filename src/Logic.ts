@@ -57,20 +57,20 @@ export function renderUniqueSequenceType(type: SequenceUniqueType) {
   }
 }
 
-export function getActionValues(action: SequenceType) {
+export function getUniqueSequence(action: SequenceType) {
   switch (action) {
     case SequenceType.HIT:
-      return [-3, -6, -9]
+      return [SequenceUniqueType.HIT_1, SequenceUniqueType.HIT_2, SequenceUniqueType.HIT_3]
     case SequenceType.DRAW:
-      return [-15]
+      return [SequenceUniqueType.DRAW]
     case SequenceType.PUNCH:
-      return [2]
+      return [SequenceUniqueType.PUNCH]
     case SequenceType.BEND:
-      return [7]
+      return [SequenceUniqueType.BEND]
     case SequenceType.UPSET:
-      return [13]
+      return [SequenceUniqueType.UPSET]
     case SequenceType.SHRINK:
-      return [16]
+      return [SequenceUniqueType.SHRINK]
   }
 }
 
@@ -80,23 +80,31 @@ export function getActionValues(action: SequenceType) {
 //   }
 // }
 
-export function getPossibleResults(actions: SequenceType[]) {
-  const results = actions.map(getActionValues);
-  let nextResults = results.reduce((acc, val) => {
-    const newAcc = [];
+export function mapKeys<K, L, T>(m: Map<K, T>, func: (key: K) => L): Map<L, T> {
+  const newMap = new Map<L, T>();
+  for (const [key, value] of m) {
+    newMap.set(func(key), value);
+  }
+  return newMap;
+}
+
+export function getPossibleResults(actions: SequenceType[]): Map<number, SequenceUniqueType[]> {
+  const results = actions.map(getUniqueSequence);
+  const initialMap = new Map<number, SequenceUniqueType[]>();
+  initialMap.set(0, []);
+
+  const nextResults = results.reduce((acc, val) => {
+    const newAcc = new Map<number, SequenceUniqueType[]>();
     // try all combinations, but remove duplicates
-    for (const a of acc) {
+    for (const [accVal, accSeq] of acc) {
       for (const v of val) {
-        const combine = a + v;
-        if (newAcc.indexOf(combine) === -1) {
-          newAcc.push(combine);
-        }
+        const combine = accVal + v;
+        newAcc.set(combine, [...accSeq, v]);
       }
     }
     return newAcc;
-  }, [0]);
+  }, initialMap);
 
-  nextResults.sort((a, b) => a - b);
   return nextResults;
 }
 
@@ -125,14 +133,14 @@ function sumActions(counter: Counter): number {
   }, 0);
 }
 
-export type Solutions = { [key: number]: SequenceUniqueType[] };
+export type Solutions = { [key: number]: [SequenceUniqueType[], SequenceUniqueType[]] };
 
-export function findShortestSolutionsForMultipleValues(values: number[]): Solutions | null {
+export function findShortestSolutionsForMultipleValues(inputs: Map<number, SequenceUniqueType[]>): Solutions | null {
   const result: Solutions = {};
-  for (const value of values) {
-    const solution = findShortestSolution(value);
+  for (const [val, inputSeq] of inputs) {
+    const solution = findShortestSolution(val);
     if (solution !== null) {
-      result[value] = solution;
+      result[val] = [solution, inputSeq];
     }
   }
   return result;

@@ -1,8 +1,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Stack, Typography } from '@mui/joy';
+import { Button, Card, Grid, Stack, Typography } from '@mui/joy';
 import './App.css';
-import { SequenceType, SequenceUniqueType, Solutions, findShortestSolution, findShortestSolutionsForMultipleValues, getPossibleResults, renderSequenceType, renderUniqueSequenceType } from './Logic';
+import { SequenceType, SequenceUniqueType, Solutions, findShortestSolution, findShortestSolutionsForMultipleValues, getPossibleResults, mapKeys, renderSequenceType, renderUniqueSequenceType } from './Logic';
 import UndoIcon from '@mui/icons-material/Undo';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -66,10 +66,10 @@ function App() {
           <Typography level="body1">
             Possible movement from sequence:&nbsp;
             <Typography level="body1" variant="soft">
-              {possibleValues.map(value => value + '').join(', ')}
+              {[...possibleValues].map(([value, _]) => value + '').join(', ')}
             </Typography>
           </Typography>
-          <Button variant="solid" onClick={() => setSolutionStore(findShortestSolutionsForMultipleValues(possibleValues.map(e => -e)))}>
+          <Button variant="solid" onClick={() => setSolutionStore(findShortestSolutionsForMultipleValues(mapKeys(possibleValues, e => -e)))}>
             Compute Solution
           </Button>
           {solutionStore === null ? (
@@ -81,17 +81,53 @@ function App() {
               Solution not computed
             </Typography>
           ) : (
-            <Typography level="body1">
-              Solution:&nbsp;
-              <Typography level="body1" variant="soft">
-                {Object.entries(solutionStore).map(([key, sol]) => `${key}: ` + sol.map(renderUniqueSequenceType).join(', ')).join('; ')}
+            <Stack direction="column" spacing={2} style={{
+              alignItems: 'center',
+            }}>
+              <Typography level="body1">
+                Solutions
               </Typography>
-            </Typography>
-          ))}
+              <Grid container spacing={2} className="solution-grid">
+                <Grid xs={6}>
+                  <Typography level="body1">
+                    Setup
+                  </Typography>
+                </Grid>
+                <Grid xs={6} >
+                  <Typography level="body1">
+                    Final
+                  </Typography>
+                </Grid>
+                {Object.entries(solutionStore).map(([key, [out, input]]) =>
+                  <>
+                    <Grid xs={6}>
+                      <Typography level="body1" variant="soft" className="solution-typography">
+                        {out.map(renderUniqueSequenceType).join(', ')}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography level="body1" variant="soft" className="solution-typography">
+                        {input.map(renderUniqueSequenceType).join(', ')}
+                      </Typography>
+                    </Grid>
+                  </>
 
+                )}
+
+              </Grid>
+
+            </Stack>
+
+          ))}
         </div>
+      </Card >
+
+      <Card variant='outlined'>
+        <Typography level="body1">
+          How to use:<br />Line up the two pointer on the anvil, and then enter the final sequence into the first box. Then, click the compute solution button to find which actions will setup the pointer such that the final combination results in the pointers aligning again. With hammer hits, which have multiple strengths, the right side shows which strength to use.
+        </Typography>
       </Card>
-    </div>
+    </div >
   );
 }
 
