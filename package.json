@@ -48,5 +48,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.10"
-  }
+  },
+  "homepage": "https://www.jonathanrotter.com/game-utils/"
 }
