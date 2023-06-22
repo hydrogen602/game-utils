@@ -6,7 +6,7 @@ import { SequenceType, SequenceUniqueType, Solutions, findShortestSolution, find
 import UndoIcon from '@mui/icons-material/Undo';
 import ClearIcon from '@mui/icons-material/Clear';
 
-
+import core_logic_promise from 'core-logic';
 
 function App() {
   const [finalSeq, setFinalSeq] = useState<SequenceType[]>([]);

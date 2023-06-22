@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/game-utils/static/css/main.659f7c0f.css",
-    "main.js": "/game-utils/static/js/main.d995fc8c.js",
+    "main.js": "/game-utils/static/js/main.852e0c10.js",
     "static/js/787.635072bf.chunk.js": "/game-utils/static/js/787.635072bf.chunk.js",
+    "static/media/core_logic_bg.wasm": "/game-utils/static/media/core_logic_bg.c80abecb0c8414322d26.wasm",
     "static/media/public-sans-latin-400-normal.woff": "/game-utils/static/media/public-sans-latin-400-normal.9d2594c80c36f4b1e2ee.woff",
     "static/media/public-sans-latin-400-normal.woff2": "/game-utils/static/media/public-sans-latin-400-normal.4758638f2eeeaf0dd6c4.woff2",
     "static/media/public-sans-latin-ext-400-normal.woff": "/game-utils/static/media/public-sans-latin-ext-400-normal.8d4f2b95588a9c535ad8.woff",
@@ -11,11 +12,11 @@
     "static/media/public-sans-vietnamese-400-normal.woff2": "/game-utils/static/media/public-sans-vietnamese-400-normal.4490eed5a77c4164de3d.woff2",
     "index.html": "/game-utils/index.html",
     "main.659f7c0f.css.map": "/game-utils/static/css/main.659f7c0f.css.map",
-    "main.d995fc8c.js.map": "/game-utils/static/js/main.d995fc8c.js.map",
+    "main.852e0c10.js.map": "/game-utils/static/js/main.852e0c10.js.map",
     "787.635072bf.chunk.js.map": "/game-utils/static/js/787.635072bf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.659f7c0f.css",
-    "static/js/main.d995fc8c.js"
+    "static/js/main.852e0c10.js"
   ]
 }
