@@ -6,7 +6,12 @@ import { SequenceType, SequenceUniqueType, Solutions, findShortestSolution, find
 import UndoIcon from '@mui/icons-material/Undo';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import core_logic_promise from 'core-logic';
+import core_logic_promise, { findBestInverseOfSeq } from 'core-logic';
+
+core_logic_promise().then(core_logic => {
+  console.log(core_logic);
+  console.log(findBestInverseOfSeq(['Hit', 'Hit']));
+});
 
 function App() {
   const [finalSeq, setFinalSeq] = useState<SequenceType[]>([]);
