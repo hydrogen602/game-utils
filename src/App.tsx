@@ -1,36 +1,38 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Grid, Stack, Typography } from '@mui/joy';
 import './App.css';
-import { SequenceType, SequenceUniqueType, Solutions, findShortestSolution, findShortestSolutionsForMultipleValues, getPossibleResults, mapKeys, renderSequenceType, renderUniqueSequenceType } from './Logic';
 import UndoIcon from '@mui/icons-material/Undo';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import core_logic_promise, { findBestInverseOfSeq } from 'core-logic';
+import { findBestInverseOfSeq } from 'core-logic';
 
-core_logic_promise().then(core_logic => {
-  console.log(core_logic);
-  console.log(findBestInverseOfSeq(['Hit', 'Hit']));
-});
+type GroupActions = 'Hit' | 'Draw' | 'Punch' | 'Bend' | 'Upset' | 'Shrink';
+
+function stringArrayFormatter(arr: string[]): string {
+  if (arr.length === 0) {
+    return '<none>';
+  }
+  return arr.join(', ');
+}
 
 function App() {
-  const [finalSeq, setFinalSeq] = useState<SequenceType[]>([]);
-  const possibleValues = useMemo(() => getPossibleResults(finalSeq), [finalSeq]);
+  const [finalSeq, setFinalSeq] = useState<GroupActions[]>([]);
 
-  const [solutionStore, setSolutionStore] = useState<Solutions | undefined | null>(undefined);
+  const [solutionStore, setSolutionStore] = useState<([string[], string[]])[] | undefined>(undefined);
 
   useEffect(() => {
     setSolutionStore(undefined);
   }, [finalSeq]);
 
-  function ButtonGridButton({ row, col, seqType }: { row: number, col: number, seqType: SequenceType }) {
+  function ButtonGridButton({ row, col, seqType }: { row: number, col: number, seqType: GroupActions }) {
     return (
       <Button style={{
         gridColumn: `${col} / span 1`,
         gridRow: `${row} / span 1`,
       }}
         onClick={() => setFinalSeq(sequence => [...sequence, seqType])}
-      >{renderSequenceType(seqType)}</Button>
+      >{seqType}</Button>
     );
   }
 
@@ -44,15 +46,15 @@ function App() {
           <Typography level="body1">Final Sequence</Typography>
 
           <div className="action-buttons" >
-            <ButtonGridButton row={1} col={1} seqType={SequenceType.HIT} />
-            <ButtonGridButton row={1} col={2} seqType={SequenceType.HIT} />
-            <ButtonGridButton row={2} col={1} seqType={SequenceType.HIT} />
-            <ButtonGridButton row={2} col={2} seqType={SequenceType.DRAW} />
+            <ButtonGridButton row={1} col={1} seqType={'Hit'} />
+            <ButtonGridButton row={1} col={2} seqType={'Hit'} />
+            <ButtonGridButton row={2} col={1} seqType={'Hit'} />
+            <ButtonGridButton row={2} col={2} seqType={'Draw'} />
 
-            <ButtonGridButton row={1} col={4} seqType={SequenceType.PUNCH} />
-            <ButtonGridButton row={1} col={5} seqType={SequenceType.BEND} />
-            <ButtonGridButton row={2} col={4} seqType={SequenceType.UPSET} />
-            <ButtonGridButton row={2} col={5} seqType={SequenceType.SHRINK} />
+            <ButtonGridButton row={1} col={4} seqType={'Punch'} />
+            <ButtonGridButton row={1} col={5} seqType={'Bend'} />
+            <ButtonGridButton row={2} col={4} seqType={'Upset'} />
+            <ButtonGridButton row={2} col={5} seqType={'Shrink'} />
           </div >
 
           <Stack direction="row" spacing={2}>
@@ -61,29 +63,24 @@ function App() {
           </Stack>
 
           <Typography level="body1">
-            {finalSeq.map(renderSequenceType).join(', ')}
+            {finalSeq.join(', ')}
           </Typography>
         </div>
       </Card>
 
       <Card variant='outlined'>
         <div className='centered-flex'>
-          <Typography level="body1">
-            Possible movement from sequence:&nbsp;
-            <Typography level="body1" variant="soft">
-              {[...possibleValues].map(([value, _]) => value + '').join(', ')}
-            </Typography>
-          </Typography>
-          <Button variant="solid" onClick={() => setSolutionStore(findShortestSolutionsForMultipleValues(mapKeys(possibleValues, e => -e)))}>
+          <Button variant="solid" onClick={() => setSolutionStore(findBestInverseOfSeq(finalSeq))}>
             Compute Solution
           </Button>
-          {solutionStore === null ? (
-            <Typography level="body1">
-              No solution found
-            </Typography>
-          ) : (solutionStore === undefined ? (
+          {solutionStore === undefined ? (
             <Typography level="body1">
               Solution not computed
+
+            </Typography>
+          ) : (solutionStore.length === 0 ? (
+            <Typography level="body1">
+              No solution found
             </Typography>
           ) : (
             <Stack direction="column" spacing={2} style={{
@@ -103,16 +100,16 @@ function App() {
                     Final
                   </Typography>
                 </Grid>
-                {Object.entries(solutionStore).map(([key, [out, input]]) =>
+                {solutionStore.map(([out, input]) =>
                   <>
                     <Grid xs={6}>
                       <Typography level="body1" variant="soft" className="solution-typography">
-                        {out.map(renderUniqueSequenceType).join(', ')}
+                        {stringArrayFormatter(out)}
                       </Typography>
                     </Grid>
                     <Grid xs={6}>
                       <Typography level="body1" variant="soft" className="solution-typography">
-                        {input.map(renderUniqueSequenceType).join(', ')}
+                        {stringArrayFormatter(input)}
                       </Typography>
                     </Grid>
                   </>

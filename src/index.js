@@ -5,14 +5,22 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import App from './App';
 
+import core_logic_promise from 'core-logic';
+
+// this makes sure nothing happens until the WASM code is loaded
+core_logic_promise().then(_ => {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}).catch(_ => {
+  const root = document.getElementById('root');
+  root.innerText = 'Error loading WASM code';
+});
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

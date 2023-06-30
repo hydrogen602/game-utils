@@ -29,6 +29,8 @@ pub fn setup() {
 }
 
 #[wasm_bindgen(js_name = "findBestInverseOfSeq")]
+/// returns a Vec<[Vec<String>; 2]> where the first Vec<String> is the best inverse sequence and the second Vec<String> is the sequence of actions that were used to calculate the best inverse sequence
+/// this matters because while for the recipe any Hit is ok, only one Hit will match the inverse sequence
 pub fn find_best_inverse_of_seq(group_actions: Box<[js_sys::JsString]>) -> Result<JsValue, String> {
     let group_actions = group_actions
         .iter()
